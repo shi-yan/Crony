@@ -1,0 +1,192 @@
+<style>
+.crony-container 
+{
+	display: grid;
+	grid-template-columns: 180px auto;
+	grid-template-rows: 80px auto;
+	height: 100%;
+}
+
+.crony-header
+{
+	background-color: red;
+	grid-column: 1 / 3;
+	grid-row: 1 / 2;
+}
+
+.crony-menu
+{
+	background-color: blue;
+	grid-column: 1 / 2;
+	grid-row: 2 / 3;
+}
+
+.crony-app
+{
+	height: 100%;
+	margin: 0px;
+}
+
+.crony-menu-item
+{
+	background-color: red;
+	-webkit-transition: background-color 1s; /* For Safari 3.1 to 6.0 */
+    transition: background-color 1s;
+    cursor: pointer;
+}
+
+.crony-menu-item:hover
+{
+	background-color: yellow;
+}
+
+.crony-tab-view-top
+{
+	background-color: gray;
+	grid-row: 1 / 2;
+	height: 80px;
+}
+
+.crony-tab
+{
+	background-color: green;
+	width: 200px;
+	height: 100%;
+	display: block;
+	float: left;
+	cursor: pointer;
+}
+
+.crony-tab-view-content
+{
+	grid-row: 2 / 3;
+	grid-column: 1 / 2;
+
+}
+
+.crony-tab-view 
+{
+	display: grid;
+	grid-template-columns: auto;
+	grid-template-rows: 80px auto;
+	height: 100%;
+}
+
+.crony-job-status-terminal
+{
+	background-color: black;
+	grid-column: 1 / 2;
+	grid-row: 1 / 2;
+}
+
+.crony-job-status-toolbar
+{
+	background-color: yellow;
+	grid-column: 1 / 2;
+	grid-row: 2 / 3;
+}
+
+.crony-job-status-page
+{
+	display: grid;
+	grid-template-columns: auto 200px;
+	grid-template-rows: auto 32px;
+	height: calc(100% - 80px);
+}
+
+body 
+{
+	margin: 0px;
+}
+
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+
+<div class="crony-app" id="app">
+  	<div class="crony-container">
+  		<crony-header></crony-header>
+  		<crony-menu></crony-menu>
+  		<crony-job-page></crony-job-page>
+	</div>
+</div>
+
+<script type="text/javascript">
+
+Vue.component('crony-header', {
+  template: '<div class="crony-header">This is a header</div>'
+})
+
+Vue.component('crony-menu-item', {
+  template: '<div class="crony-menu-item">{{title}}</div>',
+  props:['title']
+})
+
+Vue.component('crony-tab', {
+	template: '<div class="crony-tab">{{title}}</div>',
+	props:['title']
+})
+
+Vue.component('crony-job-status-page',{
+	template: '<div class="crony-job-status-page"><div class="crony-job-status-terminal"></div><div class="crony-job-status-toolbar"></div></div>'
+})
+
+Vue.component('crony-job-config-page',{
+	template: '<div class="crony-job-config-page">job config</div>'
+})
+
+Vue.component('crony-tab-view', {
+	template: '<div class="crony-tab-view"><div class="crony-tab-view-top"><crony-tab v-for="tab in tabList" v-bind:title="tab" v-on:click.native="setPage(tab)"></crony-tab></div><component v-bind:is="pageType"></component></div>',
+	data: function()
+	{
+		return {
+			tabList: ["Builds", "Config"],
+			pageType: "crony-job-status-page"
+		};
+	},
+	methods: {
+		setPage: function(tab)
+		{
+			if (tab === 'Builds')
+			{
+				this.pageType = "crony-job-status-page"
+			}
+			else if (tab === 'Config')
+			{
+				this.pageType = "crony-job-config-page"
+			}
+		}
+	}
+})
+
+Vue.component('crony-job-page', {
+	template: '<div class="crony-job-page"><crony-tab-view></crony-tab-view></div>'
+
+})
+
+Vue.component('crony-menu', {
+  template: '<div class="crony-menu"><crony-menu-item v-for="hah in menuItemList" v-bind:title="hah"></crony-menu-item><crony-menu-item v-on:click.native="addNewJob" title="+ New Job"></crony-menu-item><component is="crony-menu-item" title="Settings"></component></div>',
+  data: function()
+  {
+  	return {
+  		menuItemList: ["ff", "bb"]
+  	};
+  },
+  methods: {
+  	addNewJob: function()
+ 	{
+ 		console.log("df");
+  		this.menuItemList.push("new");
+  	}
+  }
+
+})
+	
+var app = new Vue({
+  el: '#app',
+  data: {
+    message: 'Hello Vue!'
+  }
+})
+
+</script>
